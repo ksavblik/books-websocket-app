@@ -1,7 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import AddIcon from '@mui/icons-material/Add';
 
 import BooksTable from '../BooksTable';
 import LoadingIconButton from '../LoadingIconButton';
@@ -53,7 +54,7 @@ const MainPage: FC<ReduxProps> = ({ books, booksAreLoaded, booksAreLoading, load
   return (
     <Box>
       <Paper sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', p: 2 }}>
-        <Typography mr='75%' variant='h6'>
+        <Typography mr='auto' variant='h6' whiteSpace='nowrap'>
           Books Catalog
         </Typography>
         <LoadingIconButton
@@ -64,6 +65,12 @@ const MainPage: FC<ReduxProps> = ({ books, booksAreLoaded, booksAreLoading, load
           title='Refresh'
           actionIcon={<RefreshIcon />}
         />
+        <Button onClick={() => console.log('click')}>
+          <Typography variant='body2' sx={{ mr: 1 }}>
+            Add book
+          </Typography>
+          <AddIcon />
+        </Button>
       </Paper>
       <BooksTable books={books} />
     </Box>
