@@ -9,16 +9,11 @@ const webSocketChannel = () => eventChannel(emitter => {
   try {
     const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL!);
 
-    console.log('websocket is', webSocket);
-
-    webSocket.addEventListener('open', event => {
-      console.log('websockets is', webSocket);
-      console.log('WebSocket open event', event);
+    webSocket.addEventListener('open', () => {
       emitter(connectWebSocketClientSuccess(webSocket));
     });
 
     webSocket.addEventListener('message', event => {
-      console.log('WebSocket message event', event);
       if (event.data) {
         try {
           const parsedEventData: WebSocketMessagePayload = JSON.parse(event?.data);
@@ -29,20 +24,18 @@ const webSocketChannel = () => eventChannel(emitter => {
       }
     });
 
-    webSocket.addEventListener('close', event => {
-      console.log('WebSocket close event', event);
+    webSocket.addEventListener('close', () => {
+      console.log('Closed WebSocket connection!');
     });
 
-    webSocket.addEventListener('error', event => {
-      console.log('WebSocket error event', event);
+    webSocket.addEventListener('error', () => {
+      console.error('Error: Interrupted WebSocket connection!');
     });
 
   } catch (err: any) {
     emitter(connectWebSocketClientError(err))
   }
-  return () => {
-    console.log('WebSocket EventChannel dismounted!')
-  }
+  return () => {}
 });
 
 export function* webSocketSagas(): any {
