@@ -1,8 +1,9 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, delay, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import { CreateBookAction, CREATE_BOOK, DeleteBookAction, DELETE_BOOK, GetBookAction, GET_BOOK, GET_BOOKS, UpdateBookAction, UPDATE_BOOK } from './types';
 import bookService from '../../services/book';
 import { createBookError, createBookSuccess, deleteBookError, deleteBookSuccess, getBookError, getBooksError, getBooksSuccess, getBookSuccess, updateBookError, updateBookSuccess } from './actions';
 import { Book } from '../../../types';
+import { removeBookUpdatedFlag, setBookDeletedFlag } from '../socket/actions';
 
 export function* getBooks() {
   try {
@@ -25,7 +26,9 @@ export function* getBook(action: GetBookAction) {
 export function* createBook(action: CreateBookAction) {
   try {
     const book: Book = yield call(bookService.createBook, action.payload);
-    yield put(createBookSuccess(book));
+    yield put(createBookSuccess({ ...book, updated: true }));
+    yield delay(2000);
+    yield put(removeBookUpdatedFlag(book.id));
   } catch (err: any) {
     yield put(createBookError(err));
   }
@@ -34,7 +37,9 @@ export function* createBook(action: CreateBookAction) {
 export function* updateBook(action: UpdateBookAction) {
   try {
     const book: Book = yield call(bookService.updateBook, action.payload.id, action.payload.book);
-    yield put(updateBookSuccess(book));
+    yield put(updateBookSuccess({ ...book, updated: true }));
+    yield delay(2000);
+    yield put(removeBookUpdatedFlag(book.id));
   } catch (err: any) {
     yield put(updateBookError(err));
   }
@@ -43,6 +48,8 @@ export function* updateBook(action: UpdateBookAction) {
 export function* deleteBook(action: DeleteBookAction) {
   try {
     const id: number = yield call(bookService.deleteBook, action.payload);
+    yield put(setBookDeletedFlag(id));
+    yield delay(1000);
     yield put(deleteBookSuccess(id));
   } catch (err: any) {
     yield put(deleteBookError(err));

@@ -71,6 +71,7 @@ const MainPage: FC<ReduxProps> = ({ books, booksAreLoaded, booksAreLoading, load
   }, []);
 
   const onClickConfirmDelete = useCallback(() => {
+    setShowDeleteBookDialog(false);
     if (selectedBook) {
       onDeleteBook(selectedBook.id);
     }
@@ -114,7 +115,9 @@ const MainPage: FC<ReduxProps> = ({ books, booksAreLoaded, booksAreLoading, load
         onConfirm={onClickConfirmDelete}
         title='Confirm delete'
       >
-        {`Are you sure you want to delete the ${selectedBook?.title} book with id ${selectedBook?.id}`}
+        <Typography>
+          Are you sure you want to delete the <b>{selectedBook?.title}</b> book with id <b>{selectedBook?.id}</b>
+        </Typography>
       </ConfirmDialog>
     </Box>
   );

@@ -1,6 +1,9 @@
-import { TableCell, TableRow } from '@mui/material';
-import { blue, red } from '@mui/material/colors';
 import { FC } from 'react';
+import { IconButton, TableCell, TableRow } from '@mui/material';
+import { blue, red } from '@mui/material/colors';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+
 import { Book } from '../../types';
 
 export interface BookRowProps {
@@ -19,7 +22,7 @@ const getBgColor = (updated?: boolean, deleted?: boolean): string | null => {
   return null;
 };
 
-export const BookRow: FC<BookRowProps> = ({ book }) => {
+export const BookRow: FC<BookRowProps> = ({ book, onSelectBook, onClickDelete }) => {
   const { id, title, author, price, publishDate, updatedAt, createdAt, updated, deleted } = book;
   return (
     <TableRow
@@ -35,6 +38,12 @@ export const BookRow: FC<BookRowProps> = ({ book }) => {
       <TableCell align='center'>{publishDate?.toString()}</TableCell>
       <TableCell align='center'>{updatedAt.toString()}</TableCell>
       <TableCell align='center'>{createdAt.toString()}</TableCell>
+      <IconButton onClick={() => onSelectBook(book)}>
+        <EditIcon />
+      </IconButton>
+      <IconButton onClick={() => onClickDelete(book)}>
+        <DeleteIcon />
+      </IconButton>
     </TableRow>
   );
 };

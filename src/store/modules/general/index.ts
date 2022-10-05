@@ -43,6 +43,9 @@ const generalReducer = (state: GeneralState = initialState, action: GeneralReduc
     }
     case EVENT_CREATED_BOOK:
     case CREATE_BOOK_SUCCESS: {
+      if (state.books.list.some(({ id }) => action.payload.id === id)) {
+        return state;
+      }
       const list = [...state.books.list, { ...action.payload, updated: true }];
       return {
         ...state,
