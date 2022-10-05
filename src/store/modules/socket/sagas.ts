@@ -1,7 +1,9 @@
-import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, delay, put, select, take, takeEvery, takeLatest } from 'redux-saga/effects';
 import { CONNECT_WEBSOCKET_CLIENT, WebSocketEventAction, WebSocketMessagePayload, WEBSOCKET_EVENT } from './types';
-import { connectWebSocketClientError, connectWebSocketClientSuccess, eventCreatedBook, eventDeletedBook, eventUpdatedBook, webSocketEvent } from './actions';
+import { connectWebSocketClientError, connectWebSocketClientSuccess, eventCreatedBook, eventDeletedBook, eventUpdatedBook, removeBookUpdatedFlag, setBookDeletedFlag, webSocketEvent } from './actions';
 import { eventChannel } from 'redux-saga';
+import { getBooks } from '../../selectors/sagas';
+import { Book } from '../../../types';
 
 const webSocketChannel = () => eventChannel(emitter => {
   try {
@@ -53,16 +55,29 @@ export function* webSocketSagas(): any {
 
 export function* eventsHandler(action: WebSocketEventAction) {
   const { payload: { created, updated, deleted } } = action;
+
+  const books: Book[] = yield select(getBooks);
   
   if (created) {
-    yield put(eventCreatedBook(created));
+    yield put(eventCreatedBook({ ...created, updated: true }));
+    yield delay(2000);
+    yield put(removeBookUpdatedFlag(created.id));
   }
 
   if (updated) {
-    yield put(eventUpdatedBook(updated));
+    const bookExists = books.some(({ id }) => updated.id === id);
+    if (bookExists) {
+      yield put(eventUpdatedBook({ ...updated, updated: true }));
+    } else {
+      yield put(eventCreatedBook({ ...updated, updated: true }));
+    }
+    yield delay(2000);
+    yield put(removeBookUpdatedFlag(updated.id));
   }
 
   if (deleted) {
+    yield put(setBookDeletedFlag(deleted));
+    yield delay(1000);
     yield put(eventDeletedBook(deleted));
   }
 }

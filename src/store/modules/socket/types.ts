@@ -54,6 +54,18 @@ export interface EventDeletedBookAction {
   payload: number;
 }
 
+export const REMOVE_BOOK_UPDATED_FLAG = 'REMOVE_BOOK_UPDATED_FLAG';
+export interface RemoveBookUpdatedFlagAction {
+  type: typeof REMOVE_BOOK_UPDATED_FLAG,
+  payload: number;
+}
+
+export const SET_BOOK_DELETED_FLAG = 'SET_BOOK_DELETED_FLAG';
+export interface SetBookDeletedFlagAction {
+  type: typeof SET_BOOK_DELETED_FLAG,
+  payload: number;
+}
+
 export type SocketReducerActions =
   | ConnectWebSocketClientAction
   | ConnectWebSocketClientErrorAction
@@ -61,4 +73,6 @@ export type SocketReducerActions =
   | WebSocketEventAction
   | EventCreatedBookAction
   | EventUpdatedBookAction
-  | EventDeletedBookAction;
+  | EventDeletedBookAction
+  | RemoveBookUpdatedFlagAction
+  | SetBookDeletedFlagAction;

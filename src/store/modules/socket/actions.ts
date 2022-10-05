@@ -1,5 +1,5 @@
 import { Book, ErrorDetails } from '../../../types';
-import { ConnectWebSocketClientAction, ConnectWebSocketClientErrorAction, ConnectWebSocketClientSuccessAction, CONNECT_WEBSOCKET_CLIENT, CONNECT_WEBSOCKET_CLIENT_ERROR, CONNECT_WEBSOCKET_CLIENT_SUCCESS, EventCreatedBookAction, EventDeletedBookAction, EventUpdatedBookAction, EVENT_CREATED_BOOK, EVENT_DELETED_BOOK, EVENT_UPDATED_BOOK, WebSocketEventAction, WebSocketMessagePayload, WEBSOCKET_EVENT } from './types';
+import { ConnectWebSocketClientAction, ConnectWebSocketClientErrorAction, ConnectWebSocketClientSuccessAction, CONNECT_WEBSOCKET_CLIENT, CONNECT_WEBSOCKET_CLIENT_ERROR, CONNECT_WEBSOCKET_CLIENT_SUCCESS, EventCreatedBookAction, EventDeletedBookAction, EventUpdatedBookAction, EVENT_CREATED_BOOK, EVENT_DELETED_BOOK, EVENT_UPDATED_BOOK, RemoveBookUpdatedFlagAction, REMOVE_BOOK_UPDATED_FLAG, SetBookDeletedFlagAction, SET_BOOK_DELETED_FLAG, WebSocketEventAction, WebSocketMessagePayload, WEBSOCKET_EVENT } from './types';
 
 export const connectWebSocketClient = (): ConnectWebSocketClientAction => ({
   type: CONNECT_WEBSOCKET_CLIENT,
@@ -35,6 +35,16 @@ export const eventDeletedBook = (payload: number): EventDeletedBookAction => ({
   payload,
 });
 
+export const removeBookUpdatedFlag = (payload: number): RemoveBookUpdatedFlagAction => ({
+  type: REMOVE_BOOK_UPDATED_FLAG,
+  payload,
+});
+
+export const setBookDeletedFlag = (payload: number): SetBookDeletedFlagAction => ({
+  type: SET_BOOK_DELETED_FLAG,
+  payload,
+});
+
 export default {
   connectWebSocketClient,
   connectWebSocketClientError,
@@ -43,4 +53,6 @@ export default {
   eventCreatedBook,
   eventUpdatedBook,
   eventDeletedBook,
+  removeBookUpdatedFlag,
+  setBookDeletedFlag,
 };

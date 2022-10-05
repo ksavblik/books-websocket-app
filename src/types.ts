@@ -6,6 +6,8 @@ export interface Book {
   publishDate?: Date;
   createdAt: Date;
   updatedAt: Date;
+  updated?: boolean;
+  deleted?: boolean;
 }
 
 export interface CreateBook {
