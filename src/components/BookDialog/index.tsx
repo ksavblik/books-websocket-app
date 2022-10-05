@@ -141,17 +141,17 @@ const BookDialog: FC<BookDialogProps> = ({ open, onClose, book, createBook, upda
       <DialogContent sx={{ p: 4 }}>
         <Grid container spacing={2} sx={{ p: 1 }}>
           <Grid item xs={6}>
-             <TextField label="Title" variant="outlined" fullWidth required value={bookData.title} onChange={onFieldChange('title')} />
+             <TextField label='Title' variant='outlined' fullWidth required value={bookData.title} onChange={onFieldChange('title')} />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="Author" variant="outlined" fullWidth required value={bookData.author} onChange={onFieldChange('author')} />
+            <TextField label='Author' variant='outlined' fullWidth required value={bookData.author} onChange={onFieldChange('author')} />
           </Grid>
           <Grid item xs={6}>
-            <TextField label="Price" variant="outlined" fullWidth value={bookData.price} onChange={onFieldChange('price')} />
+            <TextField label='Price' variant='outlined' fullWidth value={bookData.price} onChange={onFieldChange('price')} />
           </Grid>
           <Grid item xs={6}>
             <DateTimePicker
-              label="Publish date"
+              label='Publish date'
               value={bookData.publishDate}
               onChange={onPublishDateChange}
               renderInput={(params) => <TextField {...params} fullWidth />}

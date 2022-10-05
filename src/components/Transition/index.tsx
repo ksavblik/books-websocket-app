@@ -1,6 +1,6 @@
-import { forwardRef } from "react";
-import Slide from "@mui/material/Slide";
-import { TransitionProps } from "@mui/material/transitions";
+import { forwardRef } from 'react';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
 
 export const InnerTransition = (
   props: TransitionProps & {
@@ -8,7 +8,7 @@ export const InnerTransition = (
   },
   ref: React.Ref<any>,
 ) => {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction='up' ref={ref} {...props} />;
 }
 
 export const Transition = forwardRef(InnerTransition);
