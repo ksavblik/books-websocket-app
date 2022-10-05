@@ -1,5 +1,5 @@
-import { Book, ErrorDetails } from "../../../types";
-import { ConnectWebSocketClientAction, ConnectWebSocketClientErrorAction, ConnectWebSocketClientSuccessAction, CONNECT_WEBSOCKET_CLIENT, CONNECT_WEBSOCKET_CLIENT_ERROR, CONNECT_WEBSOCKET_CLIENT_SUCCESS, EventCreatedBookAction, EventDeletedBookAction, EventUpdatedBookAction, EVENT_CREATED_BOOK, EVENT_DELETED_BOOK, EVENT_UPDATED_BOOK, WebSocketEventAction, WebSocketMessagePayload, WEBSOCKET_EVENT } from "./types";
+import { Book, ErrorDetails } from '../../../types';
+import { ConnectWebSocketClientAction, ConnectWebSocketClientErrorAction, ConnectWebSocketClientSuccessAction, CONNECT_WEBSOCKET_CLIENT, CONNECT_WEBSOCKET_CLIENT_ERROR, CONNECT_WEBSOCKET_CLIENT_SUCCESS, EventCreatedBookAction, EventDeletedBookAction, EventUpdatedBookAction, EVENT_CREATED_BOOK, EVENT_DELETED_BOOK, EVENT_UPDATED_BOOK, WebSocketEventAction, WebSocketMessagePayload, WEBSOCKET_EVENT } from './types';
 
 export const connectWebSocketClient = (): ConnectWebSocketClientAction => ({
   type: CONNECT_WEBSOCKET_CLIENT,

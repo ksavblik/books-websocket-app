@@ -1,7 +1,10 @@
-import { CONNECT_WEBSOCKET_CLIENT_SUCCESS, SocketReducerActions, SocketState } from "./types";
+import { CONNECT_WEBSOCKET_CLIENT_SUCCESS, SocketReducerActions, SocketState } from './types';
 
 export const initialState: SocketState = {
   webSocket: null,
+  isConnected: false,
+  isError: false,
+  error: null,
 };
 
 const socketReducer = (state: SocketState = initialState, action: SocketReducerActions): SocketState => {
@@ -9,6 +12,9 @@ const socketReducer = (state: SocketState = initialState, action: SocketReducerA
     case CONNECT_WEBSOCKET_CLIENT_SUCCESS: {
       return {
         webSocket: action.payload,
+        isConnected: true,
+        isError: false,
+        error: null,
       };
     }
     default: {
@@ -16,3 +22,5 @@ const socketReducer = (state: SocketState = initialState, action: SocketReducerA
     }
   }
 };
+
+export default socketReducer;

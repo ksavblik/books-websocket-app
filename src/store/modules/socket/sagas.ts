@@ -1,13 +1,16 @@
-import { call, put, take, takeLatest } from 'redux-saga/effects';
-import { CONNECT_WEBSOCKET_CLIENT, WebSocketMessagePayload } from './types';
-import { connectWebSocketClientError, connectWebSocketClientSuccess, webSocketEvent } from './actions';
+import { call, put, take, takeEvery, takeLatest } from 'redux-saga/effects';
+import { CONNECT_WEBSOCKET_CLIENT, WebSocketEventAction, WebSocketMessagePayload, WEBSOCKET_EVENT } from './types';
+import { connectWebSocketClientError, connectWebSocketClientSuccess, eventCreatedBook, eventDeletedBook, eventUpdatedBook, webSocketEvent } from './actions';
 import { eventChannel } from 'redux-saga';
 
 const webSocketChannel = () => eventChannel(emitter => {
   try {
     const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL!);
 
+    console.log('websocket is', webSocket);
+
     webSocket.addEventListener('open', event => {
+      console.log('websockets is', webSocket);
       console.log('WebSocket open event', event);
       emitter(connectWebSocketClientSuccess(webSocket));
     });
@@ -48,6 +51,23 @@ export function* webSocketSagas(): any {
   }
 }
 
+export function* eventsHandler(action: WebSocketEventAction) {
+  const { payload: { created, updated, deleted } } = action;
+  
+  if (created) {
+    yield put(eventCreatedBook(created));
+  }
+
+  if (updated) {
+    yield put(eventUpdatedBook(updated));
+  }
+
+  if (deleted) {
+    yield put(eventDeletedBook(deleted));
+  }
+}
+
 export default function* generalSaga() {
   yield takeLatest(CONNECT_WEBSOCKET_CLIENT, webSocketSagas);
+  yield takeEvery(WEBSOCKET_EVENT, eventsHandler);
 }

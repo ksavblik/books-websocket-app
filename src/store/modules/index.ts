@@ -1,5 +1,12 @@
-import { combineReducers } from 'redux'
-import general from './general'
-import socket from './socket'
+import { combineReducers } from 'redux';
+import general from './general';
+import socket from './socket';
+import { GeneralState } from './general/types';
+import { SocketState } from './socket/types';
 
-export default combineReducers({ general, socket })
+export interface ReduxState {
+  general: GeneralState;
+  socket: SocketState;
+}
+
+export default combineReducers({ general, socket });

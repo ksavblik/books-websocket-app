@@ -1,7 +1,10 @@
-import { Book, ErrorDetails } from "../../../types";
+import { Book, ErrorDetails } from '../../../types';
 
 export interface SocketState {
   webSocket: WebSocket | null;
+  isConnected: boolean;
+  isError: boolean;
+  error: ErrorDetails | null;
 }
 
 export const CONNECT_WEBSOCKET_CLIENT = 'CONNECT_WEBSOCKET_CLIENT';
