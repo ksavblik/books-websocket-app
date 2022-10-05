@@ -1,12 +1,21 @@
-import { FC, forwardRef, useState, useMemo } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+import { FC, useState, useMemo, useEffect } from 'react';
+import {
+  Alert,
+  AlertTitle,
+  IconButton,
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Collapse,
+} from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import CancelIcon from '@mui/icons-material/Cancel';
 import Grid from '@mui/material/Grid';
 import { DateTimePicker } from '@mui/x-date-pickers';
+
 import dayjs from 'dayjs';
 
 import Transition from '../Transition';
@@ -27,23 +36,64 @@ interface ButtonData {
   onClick?: () => void;
 }
 
-const BookDialog: FC<BookDialogProps> = ({ open, onClose, book, createBook, updateBook }) => {
+const initialBookState: () => Partial<Book> = () => ({
+  title: '',
+  author: '',
+  price: '',
+  publishDate: dayjs(),
+});
 
-  const [bookData, setBookData] = useState<Partial<Book>>({
-    title: '',
-    author: '',
-    price: '',
-    publishDate: dayjs(),
-  });
+const BookDialog: FC<BookDialogProps> = ({ open, onClose, book, createBook, updateBook }) => {
+  const [bookData, setBookData] = useState<Partial<Book>>(initialBookState());
+  const [showChangedBookAlert, setShowChangedBookAlert] = useState(false);
+
+  useEffect(() => {
+    if (bookData.updatedAt) {
+      // this is the case when book got updated while user was editing it
+      if (book?.updatedAt && bookData.updatedAt !== book.updatedAt) {
+        setShowChangedBookAlert(true);
+      }
+      // case when the book got deleted but user was editing it
+      if (!book?.updatedAt) {
+        setBookData(prev => ({ ...prev, id: undefined, updatedAt: undefined }));
+      }
+    } else if (book?.updatedAt) {
+      setBookData({ ...book });
+    }
+  }, [book?.updatedAt]);
+
+  const updateBookTimestamp = () => {
+    setShowChangedBookAlert(false);
+    setBookData({ ...bookData, updatedAt: book?.updatedAt });
+  };
+
+  const updateBookData = () => {
+    setShowChangedBookAlert(false);
+    if (book) {
+      setBookData({ ...bookData, ...book });
+    }
+  };
+
+  const onInnerClose = () => {
+    setBookData(initialBookState());
+    onClose();
+  };
 
   const onPublishDateChange = (publishDate: dayjs.Dayjs | null) => setBookData(prev => ({ ...prev, publishDate }));
   const onFieldChange = (fieldName: 'title' | 'author' | 'price') =>
     ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => setBookData(prev => ({ ...prev, [fieldName]: value }));
 
   const { title, disabled, onClick }: ButtonData = useMemo(() => {
-    const acceptable = bookData.title && bookData.author;
-    if (bookData.id && bookData.updatedAt) {
-      const { id, updatedAt } = bookData;
+    const {
+      id,
+      title,
+      author,
+      price,
+      publishDate,
+      updatedAt,
+    } = bookData;
+    const acceptable = title && author;
+    if (id && updatedAt) {
       return {
         title: 'Update',
         disabled: !acceptable,
@@ -52,14 +102,14 @@ const BookDialog: FC<BookDialogProps> = ({ open, onClose, book, createBook, upda
             id,
             book: {
               id,
-              title: bookData.title,
-              author: bookData.author,
-              price: bookData.price,
-              publishDate: bookData.publishDate,
+              title,
+              author,
+              price,
+              publishDate,
               updatedAt,
             },
           });
-          onClose();
+          onInnerClose();
         },
       };
     }
@@ -68,12 +118,12 @@ const BookDialog: FC<BookDialogProps> = ({ open, onClose, book, createBook, upda
       disabled: !acceptable,
       onClick: () => {
         createBook({
-          title: bookData.title!,
-          author: bookData.author!,
-          price: bookData.price,
-          publishDate: bookData.publishDate,
+          title: title!,
+          author: author!,
+          price,
+          publishDate,
         });
-        onClose();
+        onInnerClose();
       },
     };
   }, [bookData]);
@@ -85,7 +135,7 @@ const BookDialog: FC<BookDialogProps> = ({ open, onClose, book, createBook, upda
       open={open}
       TransitionComponent={Transition}
       keepMounted
-      onClose={onClose}
+      onClose={onInnerClose}
     >
       <DialogTitle>{dialogTitle}</DialogTitle>
       <DialogContent sx={{ p: 4 }}>
@@ -109,8 +159,26 @@ const BookDialog: FC<BookDialogProps> = ({ open, onClose, book, createBook, upda
           </Grid>
         </Grid>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+      <DialogActions sx={{ p: 3 }}>
+        <Collapse in={showChangedBookAlert} sx={{ mr: 'auto' }}>
+          <Alert
+            severity='warning'
+            action={
+              <>
+                <IconButton onClick={updateBookTimestamp}>
+                  <CancelIcon/>
+                </IconButton>
+                <IconButton onClick={updateBookData}>
+                  <CheckIcon/>
+                </IconButton>
+              </>
+            }
+          >
+            <AlertTitle>This book has been changed</AlertTitle>
+            Do you wish to pull the new data?
+          </Alert>
+        </Collapse>
+        <Button onClick={onInnerClose}>Cancel</Button>
         <Button onClick={onClick} disabled={disabled}>{title}</Button>
       </DialogActions>
     </Dialog>

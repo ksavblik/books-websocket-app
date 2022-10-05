@@ -33,7 +33,16 @@ const connector = connect(
 
 type ReduxProps = ConnectedProps<typeof connector>;
 
-const MainPage: FC<ReduxProps> = ({ books, booksAreLoaded, booksAreLoading, loadBooks, initWebSocket, onCreateBook, onUpdateBook, onDeleteBook }) => {
+const MainPage: FC<ReduxProps> = ({
+  books,
+  booksAreLoaded,
+  booksAreLoading,
+  loadBooks,
+  initWebSocket,
+  onCreateBook,
+  onUpdateBook,
+  onDeleteBook,
+}) => {
   const [success, setSuccess] = useState(false);
   const [showBookDialog, setShowBookDialog] = useState(false);
   const [showDeleteBookDialog, setShowDeleteBookDialog] = useState(false);
@@ -50,6 +59,15 @@ const MainPage: FC<ReduxProps> = ({ books, booksAreLoaded, booksAreLoading, load
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (selectedBook) {
+      const bookFromStore = books.find(({ id }) => id === selectedBook.id);
+      if (bookFromStore?.updatedAt !== selectedBook.updatedAt) {
+        setSelectedBook(bookFromStore);
+      }
+    }
+  }, [books, selectedBook]);
 
   useEffect(() => {
     if (booksAreLoaded) {
@@ -77,8 +95,14 @@ const MainPage: FC<ReduxProps> = ({ books, booksAreLoaded, booksAreLoading, load
     }
   }, [selectedBook]);
 
-  const onCloseBookDialog = useCallback(() => setShowBookDialog(false), []);
-  const onCloseDeleteDialog = useCallback(() => setShowDeleteBookDialog(false), [])
+  const onCloseBookDialog = useCallback(() => {
+    setShowBookDialog(false);
+    setSelectedBook(undefined);
+  }, []);
+  const onCloseDeleteDialog = useCallback(() => {
+    setShowDeleteBookDialog(false);
+    setSelectedBook(undefined);
+  }, []);
 
   return (
     <Box>
