@@ -5,6 +5,8 @@ import { Book } from '../../types';
 
 export interface BookRowProps {
   book: Book;
+  onSelectBook: (book: Book) => void;
+  onClickDelete: (book: Book) => void;
 }
 
 const getBgColor = (updated?: boolean, deleted?: boolean): string | null => {

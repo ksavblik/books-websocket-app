@@ -1,29 +1,32 @@
+import dayjs from 'dayjs';
+type DateField = Date | dayjs.Dayjs | string;
+
 export interface Book {
   id: number;
   title: string;
   author: string;
   price?: string;
-  publishDate?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  publishDate?: DateField | null;
+  createdAt: DateField;
+  updatedAt: DateField;
   updated?: boolean;
   deleted?: boolean;
 }
 
 export interface CreateBook {
-  id?: number;
-  title?: string;
-  author?: string;
+  title: string;
+  author: string;
   price?: string;
-  publishDate?: Date;
+  publishDate?: DateField | null;
 }
 
 export interface UpdateBook {
+  id: number;
   title?: string;
   author?: string;
   price?: string;
-  publishDate?: Date;
-  updatedAt: Date;
+  publishDate?: DateField | null;
+  updatedAt: DateField;
 }
 
 export interface ErrorDetails {

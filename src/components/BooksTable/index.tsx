@@ -7,9 +7,11 @@ import { Book } from '../../types';
 
 export interface BooksTableProps {
   books: Book[];
+  onSelectBook: (book: Book) => void;
+  onClickDelete: (book: Book) => void;
 }
 
-export const BooksTable: FC<BooksTableProps> = ({ books }) => {
+export const BooksTable: FC<BooksTableProps> = ({ books, onClickDelete, onSelectBook }) => {
   return (
     <TableContainer>
       <Table>
@@ -25,7 +27,7 @@ export const BooksTable: FC<BooksTableProps> = ({ books }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {books.map(book => (<BookRow key={book.id} book={book} />))}
+          {books.map(book => (<BookRow key={book.id} book={book} onSelectBook={onSelectBook} onClickDelete={onClickDelete} />))}
         </TableBody>
       </Table>
     </TableContainer>
